@@ -223,5 +223,68 @@ describe('HELPDESK PRO – ENTERPRISE API TEST SUITE', () => {
     expect(responseDueAt.getUTCHours()).toBe(11);
     expect(resolutionDueAt.getUTCHours()).toBe(18);
   });
+
+  // 11. Ticket Resolution Lifecycle
+  it('Technician resolves ticket with resolution note', async () => {
+    const res = await request(app)
+      .patch(`/api/tickets/${createdTicketId}/resolve`)
+      .set('Authorization', `Bearer ${technicianToken}`)
+      .send({
+        resolutionNote: 'Replaced damaged patch cable and regenerated credentials.',
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.status).toBe('RESOLVED');
+    expect(res.body.data.resolvedAt).toBeDefined();
+  });
+
+  // 12. Employee Reopens Ticket
+  it('Employee reopens ticket with reason', async () => {
+    const res = await request(app)
+      .patch(`/api/tickets/${createdTicketId}/reopen`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        reason: 'Issue recurred after rebooting workstation.',
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.status).toBe('IN_PROGRESS');
+  });
+
+  // 13. Re-resolve and CSAT Service Rating
+  it('Technician re-resolves and Employee submits 5-star CSAT rating', async () => {
+    // Resolve again
+    await request(app)
+      .patch(`/api/tickets/${createdTicketId}/resolve`)
+      .set('Authorization', `Bearer ${technicianToken}`)
+      .send({
+        resolutionNote: 'Applied persistent network interface bonding configuration.',
+      });
+
+    // Employee rates
+    const rateRes = await request(app)
+      .post(`/api/tickets/${createdTicketId}/rate`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        rating: 5,
+        feedback: 'Outstanding support and prompt resolution!',
+      });
+
+    expect(rateRes.status).toBe(200);
+    expect(rateRes.body.data.status).toBe('CLOSED');
+  });
+
+  // 14. CSV Export
+  it('Admin exports ticket records as CSV', async () => {
+    const res = await request(app)
+      .get('/api/tickets/export/csv')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toContain('text/csv');
+    expect(res.text).toContain('Ticket Number');
+    expect(res.text).toContain('Priority');
+    expect(res.text).toContain('Status');
+  });
 });
 
