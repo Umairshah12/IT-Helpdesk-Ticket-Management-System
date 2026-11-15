@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
 import { dbStore } from '../data/store';
+import { ENV } from './env';
 
 let prismaInstance: PrismaClient | null = null;
 let isPostgresConnected = false;
@@ -8,7 +9,12 @@ let isPostgresConnected = false;
 export const initDatabase = async (): Promise<boolean> => {
   try {
     const client = new PrismaClient({
-      log: ['error', 'warn'],
+      datasources: {
+        db: {
+          url: ENV.DATABASE_URL,
+        },
+      },
+      log: ['error'],
     });
     // Quick test query to verify Postgres availability
     await client.$connect();
@@ -17,9 +23,9 @@ export const initDatabase = async (): Promise<boolean> => {
     logger.info('Connected to PostgreSQL Database via Prisma ORM.');
     return true;
   } catch (err: any) {
+    const reason = err?.message ? err.message.split('\n')[0] : 'Connection refused';
     logger.warn(
-      'PostgreSQL is currently not running or unreachable. Falling back to the embedded relational store for immediate execution.',
-      err.message
+      `PostgreSQL is currently offline or unreachable (${reason}). Operating with high-availability in embedded relational store mode.`
     );
     isPostgresConnected = false;
     return false;
