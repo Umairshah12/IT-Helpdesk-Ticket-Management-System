@@ -8,6 +8,8 @@
     "backend"
   ],
   "scripts": {
+    "dev": "node scripts/dev.js",
+    "start": "node scripts/dev.js",
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
     "build:backend": "npm --prefix backend run build",
