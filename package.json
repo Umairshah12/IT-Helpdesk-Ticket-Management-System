@@ -1,0 +1,41 @@
+{
+  "name": "it-helpdesk-pro",
+  "version": "1.0.0",
+  "description": "HELPDESK PRO – Enterprise IT Service Management Platform",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "test:backend": "npm --prefix backend test",
+    "test:frontend": "npm --prefix frontend test",
+    "prisma:generate": "npm --prefix backend run prisma:generate",
+    "prisma:migrate": "npm --prefix backend run prisma:migrate",
+    "prisma:seed": "npm --prefix backend run prisma:seed",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "helpdesk",
+    "itsm",
+    "ticket-management",
+    "sla-monitoring",
+    "react",
+    "nodejs",
+    "postgresql",
+    "prisma"
+  ],
+  "author": "Google DeepMind Enterprise Solutions",
+  "license": "ISC",
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  }
+}
