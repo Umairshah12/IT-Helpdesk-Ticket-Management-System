@@ -37,6 +37,10 @@
   "devDependencies": {
     "prisma": "^5.22.0"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.68.3",
+    "@rollup/rollup-linux-x64-musl": "^4.68.3"
+  },
   "dependencies": {
     "@prisma/client": "^5.22.0"
   }
