@@ -8,9 +8,9 @@ const startServer = async () => {
     // Attempt database initialization
     await initDatabase();
 
-    const server = app.listen(ENV.PORT, () => {
+    const server = app.listen(ENV.PORT, '0.0.0.0', () => {
       logger.info(`Helpdesk Pro REST API running on port ${ENV.PORT} [${ENV.NODE_ENV}]`);
-      logger.info(`Health check available at: http://localhost:${ENV.PORT}/api/health`);
+      logger.info(`Health check available at: http://127.0.0.1:${ENV.PORT}/api/health`);
     });
 
     // Graceful Shutdown
